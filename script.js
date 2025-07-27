@@ -13,15 +13,8 @@ window.addEventListener("load", () => {
   }
 });
 
-
-async function goToStats() {
-  const username = document.getElementById("username").value.trim();
-  if (!username) {
-    alert("Enter a username.");
-    return;
-  }
-
- async function fetchInstagramStats(username) {
+// Fetch Instagram stats from RapidAPI
+async function fetchInstagramStats(username) {
   const apiUrl = `https://instagram-statistics-api.p.rapidapi.com/community?url=https://www.instagram.com/${encodeURIComponent(username)}/`;
 
   const options = {
@@ -39,27 +32,9 @@ async function goToStats() {
       console.error('API returned error:', errorData);
       throw new Error(`API error: ${response.status}`);
     }
-
-    const result = await response.json();
-    const data = result.data; // << THIS is where the actual Instagram data is
-
-console.log("Data keys:", Object.keys(data));
-console.log(data);
-
-    console.log("✅ API WORKING — Here's the REAL data:", data); // Check console
-
-    return {
-      username: username,
-      full_name: data.full_name || "N/A",
-      profile_pic_url: data.profile_pic_url_hd || data.profile_pic_url || "https://via.placeholder.com/150",
-      biography: data.biography || "No bio available.",
-      followers: data.edge_followed_by?.count || 0,
-      following: data.edge_follow?.count || 0,
-      posts: data.edge_owner_to_timeline_media?.count || 0,
-      reels: data.highlight_reel_count || 0, // This may not be in the data — if not, we’ll handle later
-      growth7: Array(7).fill(0),  // No growth tracking from this API
-      growth30: Array(30).fill(0)
-    };
+    const data = await response.json();
+    console.log('API data:', data); // Inspect this in console for debugging
+    return data;
   } catch (error) {
     console.error('Failed to fetch Instagram data:', error.message);
     alert('Failed to fetch Instagram data: ' + error.message);
@@ -67,12 +42,7 @@ console.log(data);
   }
 }
 
-
-  localStorage.setItem("igStats", JSON.stringify(igStats));
-  window.location.href = "stats.html";
-}
-
-
+// On clicking "Get Stats"
 async function goToStats() {
   const username = document.getElementById("username").value.trim();
   if (!username) {
@@ -83,19 +53,20 @@ async function goToStats() {
   const result = await fetchInstagramStats(username);
   if (!result || !result.data) return;
 
-  const userData = result.data;
+  const user = result.data;
 
+  // Map the API fields correctly based on the actual API response
   const igStats = {
-    username: username,
-    full_name: userData.full_name || userData.username || "N/A",
-    profile_pic_url: userData.profile_picture || "https://cdn-icons-png.flaticon.com/512/149/149071.png",
-    biography: userData.biography || "No bio available.",
-    followers: userData.followers || 0,
-    following: userData.following || 0,
-    posts: userData.posts || 0,
-    reels: userData.reels || 0,
-    growth7: Array(7).fill(userData.followers),  // fake growth for now
-    growth30: Array(30).fill(userData.followers) // same
+    username: user.username || username,
+    full_name: user.full_name || "N/A",
+    profile_pic_url: user.profile_pic_url || "https://via.placeholder.com/150",
+    biography: user.biography || "No bio available.",
+    followers: user.follower_count || 0,
+    following: user.following_count || 0,
+    posts: user.media_count || 0,
+    reels: 0, // adjust if API provides reels count
+    growth7: Array(7).fill(user.follower_count || 0),   // placeholder, no growth data
+    growth30: Array(30).fill(user.follower_count || 0)
   };
 
   localStorage.setItem("igStats", JSON.stringify(igStats));
