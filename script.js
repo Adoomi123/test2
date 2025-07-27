@@ -13,33 +13,34 @@ window.addEventListener("load", () => {
   }
 });
 
-// Fetch Instagram stats from RapidAPI using /community endpoint
-async function fetchInstagramStats(username) {
-  const apiUrl = `https://instagram-statistics-api.p.rapidapi.com/community?url=https://www.instagram.com/${encodeURIComponent(username)}/`;
 
-  const options = {
-    method: 'GET',
-    headers: {
-      'X-RapidAPI-Key': '55f77ff747msh38b57aee953e8f7p1458d9jsnc6e7dae43edf',
-      'X-RapidAPI-Host': 'instagram-statistics-api.p.rapidapi.com'
-    }
+async function goToStats() {
+  const username = document.getElementById("username").value.trim();
+  if (!username) {
+    alert("Enter a username.");
+    return;
+  }
+
+  const result = await fetchInstagramStats(username);
+  if (!result || !result.data) return;
+
+  const user = result.data;
+
+  const igStats = {
+    username: user.username || username,
+    full_name: user.full_name || "N/A",
+    profile_pic_url: user.profile_pic_url || "https://via.placeholder.com/150",
+    biography: user.biography || "No bio available.",
+    followers: user.follower_count || 0,
+    following: user.following_count || 0,
+    posts: user.media_count || 0,
+    reels: 0, // placeholder, adjust if API gives reels separately
+    growth7: Array(7).fill(0),   // no growth data from this API
+    growth30: Array(30).fill(0)
   };
 
-  try {
-    const response = await fetch(apiUrl, options);
-    if (!response.ok) {
-      const errorData = await response.json().catch(() => ({}));
-      console.error('API returned error:', errorData);
-      throw new Error(`API error: ${response.status}`);
-    }
-    const data = await response.json();
-    console.log('API data:', data); // Inspect this in console to see real structure
-    return data;
-  } catch (error) {
-    console.error('Failed to fetch Instagram data:', error.message);
-    alert('Failed to fetch Instagram data: ' + error.message);
-    return null;
-  }
+  localStorage.setItem("igStats", JSON.stringify(igStats));
+  window.location.href = "stats.html";
 }
 
 
