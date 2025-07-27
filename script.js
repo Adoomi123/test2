@@ -42,8 +42,8 @@ async function fetchInstagramStats(username) {
   }
 }
 
+// Triggered when clicking the button on home page
 async function goToStats() {
-  // your goToStats function code here, which calls fetchInstagramStats
   const username = document.getElementById("username").value.trim();
   if (!username) {
     alert("Enter a username.");
@@ -55,7 +55,7 @@ async function goToStats() {
 
   const user = result.data;
 
-  // Map the API fields correctly based on the actual API response
+  // Map API response to local storage format
   const igStats = {
     username: user.username || username,
     full_name: user.full_name || "N/A",
@@ -64,16 +64,16 @@ async function goToStats() {
     followers: user.follower_count || 0,
     following: user.following_count || 0,
     posts: user.media_count || 0,
-    reels: 0, // adjust if API provides reels count
-    growth7: Array(7).fill(user.follower_count || 0),   // placeholder, no growth data
-    growth30: Array(30).fill(user.follower_count || 0)
+    reels: 0,
+    growth7: Array(7).fill(user.follower_count || 0),  // Placeholder
+    growth30: Array(30).fill(user.follower_count || 0) // Placeholder
   };
 
   localStorage.setItem("igStats", JSON.stringify(igStats));
   window.location.href = "stats.html";
 }
 
-// Chart loading code (unchanged)
+// Chart loading code for stats page
 function loadChart(type, days) {
   const stats = JSON.parse(localStorage.getItem("igStats") || "{}");
   if (!stats.username) return;
@@ -94,11 +94,11 @@ function loadChart(type, days) {
     type: "line",
     data: {
       labels: Array.from({ length: days }, (_, i) => `Day ${i + 1}`),
-      datasets: [{ 
-        label: `Followers (${days}d)`, 
-        data: stats[`growth${days}`], 
-        borderColor: "#28a745", 
-        fill: false 
+      datasets: [{
+        label: `Followers (${days}d)`,
+        data: stats[`growth${days}`],
+        borderColor: "#28a745",
+        fill: false
       }]
     }
   });
