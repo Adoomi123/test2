@@ -33,7 +33,7 @@ async function fetchInstagramStats(username) {
       throw new Error(`API error: ${response.status}`);
     }
     const data = await response.json();
-    console.log('API data:', data); // Inspect this in console for debugging
+    console.log('API data:', data);
     return data;
   } catch (error) {
     console.error('Failed to fetch Instagram data:', error.message);
@@ -42,8 +42,8 @@ async function fetchInstagramStats(username) {
   }
 }
 
-// On clicking "Get Stats"
 async function goToStats() {
+  // your goToStats function code here, which calls fetchInstagramStats
   const username = document.getElementById("username").value.trim();
   if (!username) {
     alert("Enter a username.");
