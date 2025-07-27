@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>TokTrak | Instagram Stats</title>
+  <link rel="stylesheet" href="style.css" />
+  <link rel="icon" href="favicon.svg" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script defer src="script.js"></script>
+</head>
+<body>
+  <header class="header-container">
+    <div class="logo-container">
+      <img src="logo.svg" alt="TokTrak Logo" class="logo-img" />
+      <h1 class="logo">TokTrak</h1>
+    </div>
+    <button class="mode-toggle" onclick="toggleTheme()">🌙 / ☀️</button>
+  </header>
+
+  <main class="stats-page">
+    <p class="tagline" id="user-handle"></p>
+    <div class="profile-card">
+      <img id="profile-pic" src="" alt="Profile Picture" />
+      <h2 id="display-name"></h2>
+      <p id="bio"></p>
+    </div>
+
+    <div class="bubbles">
+      <div class="bubble">
+        <strong>Followers</strong><span id="followers"></span>
+      </div>
+      <div class="bubble">
+        <strong>Following</strong><span id="following"></span>
+      </div>
+      <div class="bubble">
+        <strong>Posts</strong><span id="posts"></span>
+      </div>
+      <div class="bubble">
+        <strong>Reels</strong><span id="reels"></span>
+      </div>
+    </div>
+
+    <section class="chart-section">
+      <h3>Followers Growth (Last 7 Days)</h3>
+      <canvas id="followersChart"></canvas>
+    </section>
+
+    <div class="advanced-link">
+      <a href="advanced.html" class="btn-link">View Advanced Stats</a>
+    </div>
+  </main>
+
+  <footer class="footer">
+    <p>© 2025 TokTrak. All rights reserved. Made by Adam (@techwithadam_official)</p>
+  </footer>
+</body>
+</html>

@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>TokTrak | Advanced Stats</title>
+  <link rel="stylesheet" href="style.css" />
+  <link rel="icon" href="favicon.svg" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script defer src="script.js"></script>
+</head>
+<body>
+  <header class="header-container">
+    <div class="logo-container">
+      <img src="logo.svg" alt="TokTrak Logo" class="logo-img" />
+      <h1 class="logo">TokTrak</h1>
+    </div>
+    <button class="mode-toggle" onclick="toggleTheme()">🌙 / ☀️</button>
+  </header>
+
+  <main class="advanced-page">
+    <h2>Advanced Growth Analytics</h2>
+
+    <div class="range-toggle">
+      <button class="range-btn active" onclick="loadChart('followers', 7)">Last 7 Days</button>
+      <button class="range-btn" onclick="loadChart('followers', 30)">Last 30 Days</button>
+    </div>
+
+    <div class="charts-container">
+      <div class="chart-box">
+        <h3>Followers Growth</h3>
+        <canvas id="advancedChart"></canvas>
+      </div>
+      <div class="chart-box">
+        <h3>Interaction Totals</h3>
+        <canvas id="multiChart"></canvas>
+      </div>
+    </div>
+
+    <div class="back-link">
+      <a href="stats.html" class="btn-link">Back to Stats</a>
+    </div>
+  </main>
+
+  <footer class="footer">
+    <p>© 2025 TokTrak. All rights reserved. Made by Adam (@techwithadam_official)</p>
+  </footer>
+</body>
+</html>
