@@ -21,23 +21,49 @@ async function goToStats() {
     return;
   }
 
-  const result = await fetchInstagramStats(username);
-  if (!result || !result.data) return;
+ async function fetchInstagramStats(username) {
+  const apiUrl = `https://instagram-statistics-api.p.rapidapi.com/community?url=https://www.instagram.com/${encodeURIComponent(username)}/`;
 
-  const user = result.data;
-
-  const igStats = {
-    username: user.username || username,
-    full_name: user.full_name || "N/A",
-    profile_pic_url: user.profile_pic_url || "https://via.placeholder.com/150",
-    biography: user.biography || "No bio available.",
-    followers: user.follower_count || 0,
-    following: user.following_count || 0,
-    posts: user.media_count || 0,
-    reels: 0, // placeholder, adjust if API gives reels separately
-    growth7: Array(7).fill(0),   // no growth data from this API
-    growth30: Array(30).fill(0)
+  const options = {
+    method: 'GET',
+    headers: {
+      'X-RapidAPI-Key': '55f77ff747msh38b57aee953e8f7p1458d9jsnc6e7dae43edf',
+      'X-RapidAPI-Host': 'instagram-statistics-api.p.rapidapi.com'
+    }
   };
+
+  try {
+    const response = await fetch(apiUrl, options);
+    if (!response.ok) {
+      const errorData = await response.json().catch(() => ({}));
+      console.error('API returned error:', errorData);
+      throw new Error(`API error: ${response.status}`);
+    }
+
+    const result = await response.json();
+    const data = result.data; // << THIS is where the actual Instagram data is
+
+    console.log("✅ API WORKING — Here's the REAL data:", data); // Check console
+
+    return {
+      username: username,
+      full_name: data.full_name || "N/A",
+      profile_pic_url: data.profile_pic_url_hd || data.profile_pic_url || "https://via.placeholder.com/150",
+      biography: data.biography || "No bio available.",
+      followers: data.edge_followed_by?.count || 0,
+      following: data.edge_follow?.count || 0,
+      posts: data.edge_owner_to_timeline_media?.count || 0,
+      reels: data.highlight_reel_count || 0, // This may not be in the data — if not, we’ll handle later
+      growth7: Array(7).fill(0),  // No growth tracking from this API
+      growth30: Array(30).fill(0)
+    };
+  } catch (error) {
+    console.error('Failed to fetch Instagram data:', error.message);
+    alert('Failed to fetch Instagram data: ' + error.message);
+    return null;
+  }
+}
+
 
   localStorage.setItem("igStats", JSON.stringify(igStats));
   window.location.href = "stats.html";
