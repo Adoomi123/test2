@@ -43,6 +43,9 @@ async function goToStats() {
     const result = await response.json();
     const data = result.data; // << THIS is where the actual Instagram data is
 
+console.log("Data keys:", Object.keys(data));
+console.log(data);
+
     console.log("✅ API WORKING — Here's the REAL data:", data); // Check console
 
     return {
