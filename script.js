@@ -42,7 +42,7 @@ async function fetchInstagramStats(username) {
   }
 }
 
-// Called on home page by Get Stats button
+
 async function goToStats() {
   const username = document.getElementById("username").value.trim();
   if (!username) {
@@ -50,22 +50,22 @@ async function goToStats() {
     return;
   }
 
-  const data = await fetchInstagramStats(username);
-  if (!data) return;
+  const result = await fetchInstagramStats(username);
+  if (!result || !result.data) return;
 
-  // Map API response fields to igStats - adjust based on your actual API response
-  // Example mapping for /community endpoint data structure:
+  const userData = result.data;
+
   const igStats = {
     username: username,
-    full_name: data.full_name || data.username || "N/A",
-    profile_pic_url: data.profile_picture || data.profile_pic_url || "https://via.placeholder.com/150",
-    biography: data.biography || "No bio available.",
-    followers: data.followers_count || 0,
-    following: data.following_count || 0,
-    posts: data.posts_count || 0,
-    reels: 0, // reels may not be provided by this API
-    growth7: Array(7).fill(0),   // No growth data in this API, so fill zeros
-    growth30: Array(30).fill(0)
+    full_name: userData.full_name || userData.username || "N/A",
+    profile_pic_url: userData.profile_picture || "https://cdn-icons-png.flaticon.com/512/149/149071.png",
+    biography: userData.biography || "No bio available.",
+    followers: userData.followers || 0,
+    following: userData.following || 0,
+    posts: userData.posts || 0,
+    reels: userData.reels || 0,
+    growth7: Array(7).fill(userData.followers),  // fake growth for now
+    growth30: Array(30).fill(userData.followers) // same
   };
 
   localStorage.setItem("igStats", JSON.stringify(igStats));
